@@ -41,10 +41,10 @@ public class MatrixDisplay extends Canvas {
     @Override
     public void paint(Graphics g)
     {
-        for (int i = 0; i < world.getHeight(); i++) {
-            for (int j = 0; j < world.getWidth(); j++) {
-                g.setColor(world.getLED(i, j).getColor());
-                g.fillRect(cellSize * j + 1, cellSize * i + 1, cellSize - 2, cellSize - 2);
+        for (int y = 0; y < world.getHeight(); y++) {
+            for (int x = 0; x < world.getWidth(); x++) {
+                g.setColor(world.getLED(x, y).getColor());
+                g.fillRect(cellSize * x + 1, cellSize * y + 1, cellSize - 2, cellSize - 2);
             }
 
         }

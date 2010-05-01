@@ -6,10 +6,10 @@ public class LEDMatrix {
 
     private LED world[][];
 
-    public LEDMatrix(int height_, int width_)
+    public LEDMatrix(int width_, int height_)
     {
-        height = height_;
         width = width_;
+        height = height_;
 
         world = new LED[height][width];
 
@@ -31,7 +31,7 @@ public class LEDMatrix {
         return width;
     }
     
-    public LED getLED(int y, int x) {
+    public LED getLED(int x, int y) {
         return world[y][x];
     }
 

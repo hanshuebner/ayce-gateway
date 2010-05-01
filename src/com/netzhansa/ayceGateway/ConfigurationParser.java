@@ -30,8 +30,10 @@ public class ConfigurationParser {
         schemaValidator.validate(new StAXSource(parser));
     }
     
-    static LEDMatrix parseConfigurationFile(String fileName) throws XMLStreamException, SAXException, IOException
+    // TODO: Read from String, validate before parsing
+    static public LEDMatrix parseConfigurationFile(String fileName) throws XMLStreamException, SAXException, IOException
     {
+        validateConfigurationFile(fileName);
         InputStream inputStream = new FileInputStream(fileName);
         XMLInputFactory factory = XMLInputFactory.newInstance();
         XMLStreamReader parser = factory.createXMLStreamReader(inputStream);
@@ -49,7 +51,7 @@ public class ConfigurationParser {
                     int address = getIntegerAttributeValue(parser, "address");
                     int x = getIntegerAttributeValue(parser, "x");
                     int y = getIntegerAttributeValue(parser, "y");
-                    
+                    // TODO: validate x/y/address range
                     LED led = world.getLED(x, y);
                     led.setUniverse(universe);
                     led.setAddress(address);
@@ -65,7 +67,6 @@ public class ConfigurationParser {
     {
         try {
             String fileName = args[0];
-            validateConfigurationFile(fileName);
             LEDMatrix world = parseConfigurationFile(fileName);
             
             System.out.println("Configuration read, width " + world.getWidth() + " height " + world.getHeight());

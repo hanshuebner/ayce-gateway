@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javax.xml.stream.XMLStreamException;
+
+import org.xml.sax.SAXException;
+
 public class AYCEGateway extends Frame implements ActionListener {
     /**
      * 
@@ -20,12 +24,12 @@ public class AYCEGateway extends Frame implements ActionListener {
     private DMXInterface dmxInterface;
     boolean interfaceOpenError = false;
     
-    public AYCEGateway(int width, int height, int cellSize, int port, String title)
+    public AYCEGateway(String configurationFileName, int cellSize, int port, String title) throws XMLStreamException, SAXException, IOException
     {
         super(title);
 
         // initialize cell world
-        world = new LEDMatrix(height, width);
+        world = ConfigurationParser.parseConfigurationFile(configurationFileName);
         setLayout(new BorderLayout());
 
         display = new MatrixDisplay(world, cellSize);
@@ -89,9 +93,9 @@ public class AYCEGateway extends Frame implements ActionListener {
         display.repaint();
     }
 
-    public void setColor(int col, int row, Color color)
+    public void setColor(int x, int y, Color color)
     {
-        world.getLED(row, col).setColor(color);
+        world.getLED(x, y).setColor(color);
     }
 
     public int getHeight()
@@ -106,9 +110,9 @@ public class AYCEGateway extends Frame implements ActionListener {
     
     public void clear()
     {
-        for (int row = 0; row < getHeight(); row++) {
-            for (int col = 0; col < getWidth(); col++) {
-                setColor(col, row, Color.BLACK);
+        for (int y = 0; y < getHeight(); y++) {
+            for (int x = 0; x < getWidth(); x++) {
+                setColor(x, y, Color.BLACK);
             }
         }
         repaint();
@@ -203,17 +207,31 @@ public class AYCEGateway extends Frame implements ActionListener {
     
     public static void main(String[] args)
     {
-        int width = Integer.parseInt(System.getProperty("width", "100"));
-        int height = Integer.parseInt(System.getProperty("height", "18"));
+        String configurationFileName = args[0];
         int cellSize = Integer.parseInt(System.getProperty("cellSize", "10"));
         int port = Integer.parseInt(System.getProperty("port", "9321"));
-        
-        AYCEGateway gateway = new AYCEGateway(width, height, cellSize, port, "All You Can Eat DMX Server");
-        
-        if (args.length > 0) {
-            gateway.openDMXInterface(args[0]);
+
+        AYCEGateway gateway;
+        try {
+            gateway = new AYCEGateway(configurationFileName, cellSize, port, "All You Can Eat DMX Server");
+            if (args.length > 1) {
+                gateway.openDMXInterface(args[1]);
+            }
+
+            gateway.run();
         }
-        
-        gateway.run();
+        catch (XMLStreamException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (SAXException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 }
