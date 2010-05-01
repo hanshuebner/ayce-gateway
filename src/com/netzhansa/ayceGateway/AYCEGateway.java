@@ -72,7 +72,7 @@ public class AYCEGateway extends Frame implements ActionListener {
         int count = 0;
         for (int x = 0; x < getWidth(); x++) {
             for (int y = 0; y < getHeight(); y++) {
-                LED led = world.getLED(y, x);
+                LED led = world.getLED(x, y);
                 if (led.addressDefined()) {
                     int universe = led.getUniverse();
                     int address = led.getAddress();
@@ -161,6 +161,7 @@ public class AYCEGateway extends Frame implements ActionListener {
                     runClientConnection(clientSocket);
                 }
                 catch (Exception e) {
+                    System.out.println("Exception caught while handling client connection: " + e);
                 }
                 clientSocket.close();
             }
