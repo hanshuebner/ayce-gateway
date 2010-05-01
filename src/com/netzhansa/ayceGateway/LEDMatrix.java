@@ -1,46 +1,44 @@
 package com.netzhansa.ayceGateway;
 
-import java.awt.Color;
-
 public class LEDMatrix {
-    private int rows;
-    private int columns;
+    private int height;
+    private int width;
 
     private LED world[][];
 
-    public LEDMatrix(int r, int c)
+    public LEDMatrix(int height_, int width_)
     {
-        rows = r;
-        columns = c;
+        height = height_;
+        width = width_;
 
-        world = new LED[r][c];
+        world = new LED[height][width];
 
-        for (int i = 0; i < r; i++) {
-            for (int j = 0; j < c; j++) {
-                world[i][j] = new LED();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                world[y][x] = new LED();
             }
         }
 
     }
 
-    public int getRows()
+    public int getHeight()
     {
-        return rows;
+        return height;
     }
 
-    public int getColumns()
+    public int getWidth()
     {
-        return columns;
+        return width;
     }
     
-    public LED getLED(int row, int col) {
-        return world[row][col];
+    public LED getLED(int y, int x) {
+        return world[y][x];
     }
 
     public void print()
     {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 System.out.print(world[i][j]);
             }
             System.out.println();

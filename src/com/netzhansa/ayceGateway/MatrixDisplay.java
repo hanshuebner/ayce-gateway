@@ -18,8 +18,8 @@ public class MatrixDisplay extends Canvas {
     {
         this.world = world;
         this.cellSize = cellSize;
-        this.width = world.getColumns() * cellSize;
-        this.height = world.getRows() * cellSize;
+        this.width = world.getWidth() * cellSize;
+        this.height = world.getHeight() * cellSize;
         this.setSize(width, height);
     }
 
@@ -41,8 +41,8 @@ public class MatrixDisplay extends Canvas {
     @Override
     public void paint(Graphics g)
     {
-        for (int i = 0; i < world.getRows(); i++) {
-            for (int j = 0; j < world.getColumns(); j++) {
+        for (int i = 0; i < world.getHeight(); i++) {
+            for (int j = 0; j < world.getWidth(); j++) {
                 g.setColor(world.getLED(i, j).getColor());
                 g.fillRect(cellSize * j + 1, cellSize * i + 1, cellSize - 2, cellSize - 2);
             }

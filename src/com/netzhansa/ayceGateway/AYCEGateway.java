@@ -15,20 +15,20 @@ public class AYCEGateway extends Frame implements ActionListener {
      */
     private static final long serialVersionUID = 1L;
     private MatrixDisplay display;
-    private LEDMatrix model;
+    private LEDMatrix world;
     private ServerSocket serverSocket;
     private DMXInterface dmxInterface;
     boolean interfaceOpenError = false;
     
-    public AYCEGateway(int columns, int rows, int cellSize, int port, String title)
+    public AYCEGateway(int width, int height, int cellSize, int port, String title)
     {
         super(title);
 
         // initialize cell world
-        model = new LEDMatrix(rows, columns);
+        world = new LEDMatrix(height, width);
         setLayout(new BorderLayout());
 
-        display = new MatrixDisplay(model, cellSize);
+        display = new MatrixDisplay(world, cellSize);
 
         add(display, "Center");
 
@@ -66,9 +66,9 @@ public class AYCEGateway extends Frame implements ActionListener {
     public void sendDMXStreams() {
         byte streams[][] = new byte[dmxInterface.getChannels()][512];
         int count = 0;
-        for (int x = 0; x < getColumns(); x++) {
-            for (int y = 0; y < getRows(); y++) {
-                LED led = model.getLED(y, x);
+        for (int x = 0; x < getWidth(); x++) {
+            for (int y = 0; y < getHeight(); y++) {
+                LED led = world.getLED(y, x);
                 if (led.addressDefined()) {
                     int universe = led.getUniverse();
                     int address = led.getAddress();
@@ -91,23 +91,23 @@ public class AYCEGateway extends Frame implements ActionListener {
 
     public void setColor(int col, int row, Color color)
     {
-        model.getLED(row, col).setColor(color);
+        world.getLED(row, col).setColor(color);
     }
 
-    public int getRows()
+    public int getHeight()
     {
-        return model.getRows();
+        return world.getHeight();
     }
 
-    public int getColumns()
+    public int getWidth()
     {
-        return model.getColumns();
+        return world.getWidth();
     }
     
     public void clear()
     {
-        for (int row = 0; row < getRows(); row++) {
-            for (int col = 0; col < getColumns(); col++) {
+        for (int row = 0; row < getHeight(); row++) {
+            for (int col = 0; col < getWidth(); col++) {
                 setColor(col, row, Color.BLACK);
             }
         }
@@ -143,22 +143,6 @@ public class AYCEGateway extends Frame implements ActionListener {
             repaint();
         }
     }
-    
-    public static void main(String[] args)
-    {
-        int columns = Integer.parseInt(System.getProperty("columns", "100"));
-        int rows = Integer.parseInt(System.getProperty("rows", "18"));
-        int cellSize = Integer.parseInt(System.getProperty("cellSize", "10"));
-        int port = Integer.parseInt(System.getProperty("port", "9321"));
-        
-        AYCEGateway gateway = new AYCEGateway(columns, rows, cellSize, port, "All You Can Eat DMX Server");
-        
-        if (args.length > 0) {
-            gateway.openDMXInterface(args[0]);
-        }
-        
-        gateway.run();
-    }
 
     private void run()
     {
@@ -189,13 +173,14 @@ public class AYCEGateway extends Frame implements ActionListener {
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
         
         out.writeShort(PROTOCOL_VERSION);
-        out.writeShort(getColumns());
-        out.writeShort(getRows());
+        out.writeShort(getWidth());
+        out.writeShort(getHeight());
         
         while (true) {
+            @SuppressWarnings("unused")
             int timestamp = in.readInt();
-            for (int y = 0; y < getRows(); y++) {
-                for (int x = 0; x < getColumns(); x++) {
+            for (int y = 0; y < getHeight(); y++) {
+                for (int x = 0; x < getWidth(); x++) {
                     int b = in.readUnsignedByte();
                     int g = in.readUnsignedByte();
                     int r = in.readUnsignedByte();
@@ -214,5 +199,21 @@ public class AYCEGateway extends Frame implements ActionListener {
         // if (ae.getSource() == btnIterate) {
         // cellWorldCanvas.nextIteration();
         // }
+    }
+    
+    public static void main(String[] args)
+    {
+        int width = Integer.parseInt(System.getProperty("width", "100"));
+        int height = Integer.parseInt(System.getProperty("height", "18"));
+        int cellSize = Integer.parseInt(System.getProperty("cellSize", "10"));
+        int port = Integer.parseInt(System.getProperty("port", "9321"));
+        
+        AYCEGateway gateway = new AYCEGateway(width, height, cellSize, port, "All You Can Eat DMX Server");
+        
+        if (args.length > 0) {
+            gateway.openDMXInterface(args[0]);
+        }
+        
+        gateway.run();
     }
 }
