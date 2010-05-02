@@ -12,8 +12,12 @@ import java.io.*;
 
 public class ConfigurationParser {
     
-    static int getIntegerAttributeValue(XMLStreamReader parser, String attributeName) {
-        return Integer.parseInt(parser.getAttributeValue("", attributeName));
+    static int getIntegerAttributeValue(XMLStreamReader parser, String attributeName) throws Exception {
+        String attributeValue = parser.getAttributeValue(null, attributeName);
+        if (attributeValue == null) {
+            throw new Exception("Could not determine value for attribute \"" + attributeName + "\"");
+        }
+        return Integer.parseInt(attributeValue);
     }
     
     static String configurationSchemaFilename = "ayce-gateway-configuration.xsd";
@@ -31,7 +35,7 @@ public class ConfigurationParser {
     }
     
     // TODO: Read from String, validate before parsing
-    static public LEDMatrix parseConfigurationFile(String fileName) throws XMLStreamException, SAXException, IOException
+    static public LEDMatrix parseConfigurationFile(String fileName) throws XMLStreamException, SAXException, IOException, Exception
     {
         validateConfigurationFile(fileName);
         InputStream inputStream = new FileInputStream(fileName);
@@ -71,15 +75,7 @@ public class ConfigurationParser {
             
             System.out.println("Configuration read, width " + world.getWidth() + " height " + world.getHeight());
         }
-        catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch (XMLStreamException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch (SAXException e) {
+        catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

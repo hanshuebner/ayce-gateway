@@ -24,7 +24,7 @@ public class AYCEGateway extends Frame implements ActionListener {
     private DMXInterface dmxInterface;
     boolean interfaceOpenError = false;
     
-    public AYCEGateway(String configurationFileName, int cellSize, int port, String title) throws XMLStreamException, SAXException, IOException
+    public AYCEGateway(String configurationFileName, int cellSize, int port, String title) throws XMLStreamException, SAXException, IOException, Exception
     {
         super(title);
 
@@ -57,7 +57,7 @@ public class AYCEGateway extends Frame implements ActionListener {
         }
     }
     
-    public void openDMXInterface(String portName) {
+    public void openDMXInterface(String portName) throws Exception {
         try {
             dmxInterface = new DMXInterface(portName);
         }
@@ -223,14 +223,17 @@ public class AYCEGateway extends Frame implements ActionListener {
         }
         catch (XMLStreamException e) {
             // TODO Auto-generated catch block
+            System.out.println("XMLStreamException: " + e);
             e.printStackTrace();
         }
         catch (SAXException e) {
             // TODO Auto-generated catch block
+            System.out.println("SAXException: " + e);
             e.printStackTrace();
         }
-        catch (IOException e) {
+        catch (Exception e) {
             // TODO Auto-generated catch block
+            System.out.println("Exception: " + e);
             e.printStackTrace();
         }
 

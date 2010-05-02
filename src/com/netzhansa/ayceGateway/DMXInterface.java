@@ -1,11 +1,9 @@
 package com.netzhansa.ayceGateway;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class DMXInterface {
-    private FileOutputStream interfaceStream;
+    private DMXCommPort interfaceStream;
     static final private byte DLE = 0x55;
     static final private byte CMD_START = 0x00;
     static final private int channels = 16;
@@ -14,8 +12,8 @@ public class DMXInterface {
         return channels;
     }
 
-    public DMXInterface(String portName) throws FileNotFoundException {
-        interfaceStream = new FileOutputStream(portName);
+    public DMXInterface(String portName) throws Exception {
+        interfaceStream = new DMXCommPort(portName);
     }
 
     void transmitStreams(byte[][] streams, int count)
@@ -74,7 +72,7 @@ public class DMXInterface {
             }
         }
         try {
-            interfaceStream.write(buf, 0, output_pos);
+            interfaceStream.write(buf, output_pos);
         }
         catch (IOException x) {
             System.out.println("IO exception");
