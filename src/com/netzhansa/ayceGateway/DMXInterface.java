@@ -26,16 +26,6 @@ public class DMXInterface {
         for (int i = 0; i < 16; i++) {
             buf[output_pos++] = 0;
         }
-        // Send 3 0 bytes as the first LED seems not to be addressable
-        for (int i = 0; i < 16; i++) {
-            buf[output_pos++] = 0x00;
-        }
-        for (int i = 0; i < 16; i++) {
-            buf[output_pos++] = 0x00;
-        }
-        for (int i = 0; i < 16; i++) {
-            buf[output_pos++] = 0x00;
-        }
         for (int pos = 0; pos < count; pos++) {
             byte slice[] = new byte[16];
             for (int channel = 0; channel < 16; channel++) {

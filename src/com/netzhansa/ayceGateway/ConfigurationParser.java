@@ -57,8 +57,8 @@ public class ConfigurationParser {
                     int y = getIntegerAttributeValue(parser, "y");
                     // TODO: validate x/y/address range
                     LED led = world.getLED(x, y);
-                    led.setUniverse(universe);
-                    led.setAddress(address);
+                    led.setUniverse(universe - 1);
+                    led.setAddress(address - 1);
                 }
                 break;
             }
